@@ -1,7 +1,62 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import CustomTable from "../../components/CustomTable";
+import { UserProvider } from "../../context/UserContext";
+import SearchInput from "../../components/SearchInput";
+import UserFilter from "../../components/UserFilter";
+import PageSizeDropDown from "../../components/PageSizeDropDown";
+import axios from "axios";
+import { useSearchParams } from "react-router-dom";
+
+interface User {
+  id: number;
+  firstName: string;
+  lastName: string;
+  maidenName: string;
+  username: string;
+  age: number;
+  gender: string;
+  email: string;
+  phone: string;
+  birthDate: string;
+  eyeColor: string;
+  bloodGroup: string;
+  height: number;
+  weight: number;
+  [key: string]: any; // This index signature allows additional dynamic keys
+}
+
+
+const fetchUserData = async (page: number, limit: number) => {
+  const response = await axios.get('https://dummyjson.com/users', {
+    params: { limit, skip: (page - 1) * limit },
+  });
+  return {
+    data: response.data.users,
+    total: response.data.total,
+  };
+};
 
 const ListUsers = () => {
+  const [searchParams] = useSearchParams();
+  const [usersData, setUsersData] = useState<User[]>([]);
+  const [totalData, setTotalData] = useState(0);
+  const [loading, setLoading] = useState(false);
+
+  const page = Number(searchParams.get('page')) || 1;
+  const limit = Number(searchParams.get('limit')) || 10;
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      const result = await fetchUserData(page, limit);
+      setUsersData(result.data);
+      setTotalData(result.total);
+      setLoading(false);
+    };
+    fetchData();
+  }, [page, limit]);
+
+  // Columns Definition: Ensure each API field is mapped correctly
   const userColumns = [
     {
       key: "firstName",
@@ -9,19 +64,19 @@ const ListUsers = () => {
       dataIndex: "firstName",
     },
     {
-      key: "lasttName",
+      key: "lastName",
       title: "Last Name",
-      dataIndex: "lasttName",
+      dataIndex: "lastName",
     },
     {
       key: "maidenName",
-      title: "Madiden Name",
+      title: "Maiden Name",
       dataIndex: "maidenName",
     },
     {
-      key: "userName",
+      key: "username",
       title: "User Name",
-      dataIndex: "userName",
+      dataIndex: "username",
     },
     {
       key: "age",
@@ -29,9 +84,9 @@ const ListUsers = () => {
       dataIndex: "age",
     },
     {
-      key: "Gender",
+      key: "gender",
       title: "Gender",
-      dataIndex: "Gender",
+      dataIndex: "gender",
     },
     {
       key: "email",
@@ -54,24 +109,35 @@ const ListUsers = () => {
       dataIndex: "eyeColor",
     },
     {
-        key: "bloodGroup",
-        title: "Blood Group",
-        dataIndex: "bloodGroup",
+      key: "bloodGroup",
+      title: "Blood Group",
+      dataIndex: "bloodGroup",
     },
     {
-        key: "height",
-        title: "Height",
-        dataIndex: "height",
+      key: "height",
+      title: "Height",
+      dataIndex: "height",
     },
     {
-        key: "weight",
-        title: "Weight",
-        dataIndex: "weight",
-    }
+      key: "weight",
+      title: "Weight",
+      dataIndex: "weight",
+    },
   ];
+
   return (
     <>
-      <CustomTable columns={userColumns} dataSources={[]} totalData={0}  />
+      <UserProvider>
+        <SearchInput />
+        <UserFilter />
+        <PageSizeDropDown />
+        <CustomTable
+          columns={userColumns}
+          dataSources={usersData}
+          totalData={totalData}
+          loading={loading}
+        />
+      </UserProvider>
     </>
   );
 };

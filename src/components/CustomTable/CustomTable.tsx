@@ -8,7 +8,7 @@ import { useSearchParams } from 'react-router-dom'
 const CustomTable = <T extends {}>({ columns, dataSources, totalData}: ICustomTable<T>) => {
   const [searchParams, setSearchParams] = useSearchParams()
   const [currentPage, setCurrentPage] = useState<number>(searchParams.get('page') ? Number(searchParams.get('page')) : 1)
-  const [pageSize, setPageSize] = useState<number>(searchParams.get('limit') ? Number(searchParams.get('limit')) : 10)
+  const [pageSize, setPageSize] = useState<number>(searchParams.get('limit') ? Number(searchParams.get('limit')) : 5)
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [forceRender, setForceRender] = useState<boolean>(false) // New state variable
   interface LastSearchParams {
@@ -33,7 +33,7 @@ const CustomTable = <T extends {}>({ columns, dataSources, totalData}: ICustomTa
 
   const handlePagination = (pagination: TablePaginationConfig) => {
     const page = pagination.current ?? 1
-    const limit = pagination.pageSize ?? 10
+    const limit = pagination.pageSize ?? 5
 
     setCurrentPage(page)
     setPageSize(limit)
