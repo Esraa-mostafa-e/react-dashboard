@@ -6,15 +6,16 @@ import { theme } from '../../styles'
 const CustomTableWrapper = styled.div`
   position: relative;
   background-color: ${theme.colors.whiteColor};
-  padding: 16px;
-  border-radius: 6px;
+  th{
+    border: 1px solid ${theme.colors.grayColor}
+  }
 `
 
 const StyledTable = styled(Table)`
   margin-top: 10px;
   .ant-table {
     border: none;
-    overflow: auto;
+    border-radius: 0px;
   }
   .ant-table-cell {
     div {
@@ -39,32 +40,40 @@ const StyledTable = styled(Table)`
     font-weight: 400 !important;
     color: ${theme.colors.darkColor} !important;
     td {
-      padding: 12px 15px !important;
+      padding: 10px 15px !important;
     }
   }
   .ant-table-tbody {
     tr {
-      &:nth-of-type(odd) {
         &:hover td {
-          background-color: ${theme.colors.whiteColor} !important;
+          background-color: ${theme.colors.grayColor} !important;
         }
-      }
-      &:nth-of-type(even) {
-        background-color: #00000005;
-      }
+
       td {
-        border: 0;
+        border: 1px solid ${theme.colors.grayColor} !important;
       }
     }
   }
   .ant-table-pagination {
+    display: flex;
+    justify-content: center;
     background-color: ${theme.colors.whiteColor} !important;
-    margin-bottom: 0 !important;
-    border-radius: 0px 0px 12px 12px;
+    margin: 30px 0 !important;
+    border-radius: 0px;
   }
-  .ant-select-selector {
-    border-radius: 22px !important;
+  .ant-pagination-item-active {
+    border: none;
+    margin-top: -5px;
+    a{
+      color: black;
+    }
   }
 `
 
-export { StyledTable, CustomTableWrapper }
+const FilterWrapper = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 20px;
+`
+export { StyledTable, CustomTableWrapper, FilterWrapper }

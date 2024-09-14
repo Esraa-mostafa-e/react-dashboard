@@ -1,24 +1,42 @@
-import { useContext } from 'react';
-import { UserContext } from '../../context/UserContext';
+import React from "react";
+import { Row, Select } from "antd";
+import styled from "styled-components";
+import { theme } from "../../styles";
 
-const PageSizeDropdown = () => {
-  const userContext = useContext(UserContext);
+const StyledPageDropdown = styled(Row)`
+  flex-direction: row-reverse;
+  align-items: center;
+  gap: 10px;
+  padding-right: 10px;
+  border-right: 1px solid ${theme.colors.grayColor};
+`;
+interface PageSizeDropdownProps {
+  pageSize: number;
+  onPageSizeChange: (size: number) => void;
+}
 
-  if (!userContext) return null;
+const { Option } = Select;
 
-  const { pageSize, setPageSize } = userContext;
-
-  const handlePageSizeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setPageSize(parseInt(e.target.value));
+const PageSizeDropdown: React.FC<PageSizeDropdownProps> = ({
+  pageSize,
+  onPageSizeChange,
+}) => {
+  const handleChange = (value: number) => {
+    onPageSizeChange(value);
   };
 
   return (
-    <select value={pageSize} onChange={handlePageSizeChange}>
-      <option value={5}>5</option>
-      <option value={10}>10</option>
-      <option value={20}>20</option>
-      <option value={50}>50</option>
-    </select>
+    <>
+      <StyledPageDropdown>
+        <span>Entries</span>
+        <Select value={pageSize} onChange={handleChange} style={{ width: 70 }}>
+          <Option value={5}>5</Option>
+          <Option value={10}>10</Option>
+          <Option value={20}>20</Option>
+          <Option value={50}>50</Option>
+        </Select>
+      </StyledPageDropdown>
+    </>
   );
 };
 

@@ -1,24 +1,6 @@
 import { createContext, useState, useEffect, ReactNode } from 'react';
 import axios from 'axios';
-
-interface User {
-  id: number;
-  firstName: string;
-  lastName: string;
-  email: string;
-  [key: string]: any;
-}
-
-interface UserContextProps {
-  users: User[];
-  pageSize: number;
-  setPageSize: (size: number) => void;
-  currentPage: number;
-  setCurrentPage: (page: number) => void;
-  filterUsersLocally: (search: string) => void;
-  applyFilter: (field: string, value: string) => void;
-  searchTerm: string;
-}
+import { User, UserContextProps } from '../types/users.types';
 
 export const UserContext = createContext<UserContextProps | undefined>(undefined);
 
@@ -36,7 +18,6 @@ export const UserProvider = ({ children }: UserProviderProps) => {
 
   const apiURL = 'https://dummyjson.com/users';
 
-  // Fetch users based on filters and page size
   const fetchUsers = () => {
     const params = {
       limit: pageSize,
@@ -60,21 +41,19 @@ export const UserProvider = ({ children }: UserProviderProps) => {
     fetchUsers();
   }, [pageSize, currentPage, filters]);
 
-  // Handle client-side search
   const filterUsersLocally = (search: string) => {
     setSearchTerm(search);
     const filtered = users.filter(user =>
-      [user.firstName, user.lastName, user.email, user.id.toString()].some(field =>
+      [user.firstName, user.gender, user.email, user.birthDate, user.id.toString()].some(field =>
         field.toLowerCase().includes(search.toLowerCase())
       )
     );
     setFilteredUsers(filtered);
   };
 
-  // Handle other filters (reset others when one changes)
   const applyFilter = (field: string, value: string) => {
     setFilters({ [field]: value });
-    setCurrentPage(1); // Reset to first page
+    setCurrentPage(1); 
   };
 
   return (

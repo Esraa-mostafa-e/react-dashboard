@@ -2,10 +2,13 @@ export interface ICustomTable<T> {
   columns: {
     key: string;
     title: string;
-    dataIndex: keyof T; // Use keyof T to ensure that dataIndex matches keys of the provided type
+    dataIndex: keyof T; 
   }[] | undefined;
-  dataSources: T[] | undefined; // T[] instead of { [key: string]: T }[]
+  dataSources: T[] | undefined; 
   totalData: number | undefined;
-  loading: boolean;
+  placeholder: string;
   onPageChange?: (page: number, pageSize: number) => void;
+  filterFields?: { id: string; type: string; label: string }[]; 
+  initialFilterState?: Record<string, string>; 
+  onApplyFilters?: (filters: Record<string, string>) => void; 
 }
